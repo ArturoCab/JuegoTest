@@ -11,6 +11,8 @@ public class Juego extends Canvas implements Runnable {
 	
 	private static final int WIDTH=800;
 	private static final int HEIGHT=600;
+	
+	private static volatile boolean enFuncionamiento=false;
 
 	private static JFrame ventana;
 	private static final String NOMBRE = "Juego";
@@ -37,16 +39,27 @@ public class Juego extends Canvas implements Runnable {
 		juego.init();
 	}
 	
-	private void init() {
+	private synchronized void init() {
+		
+		enFuncionamiento=true;
 		thread = new Thread(this,"graphics");
 		thread.start();
 	}
 	
-	private void stop() {
+	private synchronized void stop() {
+		enFuncionamiento=false;
+		
+		try {
+			thread.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void run() {
-		System.out.println("el thrad 2 se ejectua con exito");		
+		while(enFuncionamiento) {
+			
+		}
 	}
 }
