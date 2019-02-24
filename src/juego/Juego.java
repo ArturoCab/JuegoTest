@@ -17,6 +17,9 @@ public class Juego extends Canvas implements Runnable {
 	private static JFrame ventana;
 	private static final String NOMBRE = "Juego";
 	
+	private static int aps=0;
+	private static int fps=0;
+	
 	private static Thread thread;
 	
 	
@@ -55,11 +58,41 @@ public class Juego extends Canvas implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	private void actualizar() {
+		aps++;
+	}
+	
+	private void mostrar() {
+		fps++;
+	}
 
 	@Override
 	public void run() {
+		final int NS_POR_SEGUNDO=1000000000;
+		final byte APS_OBJETIVO=60;
+		final double NS_POR_ACTUALIZACION=NS_POR_SEGUNDO/APS_OBJETIVO;
+		
+		long referenciaContador=System.nanoTime();
+		long referenciaActualizacion=System.nanoTime();
+		double tiempoTranscurrido;
+		double delta=0;
 		while(enFuncionamiento) {
+			final long iniciobucle=System.nanoTime();
+			tiempoTranscurrido=iniciobucle-referenciaActualizacion;
+			referenciaActualizacion=iniciobucle;
 			
+			delta+=tiempoTranscurrido/NS_POR_ACTUALIZACION;
+			while(delta>=1) {				
+				actualizar();
+				delta--;
+			}
+			mostrar();
+			if(System.nanoTime()-referenciaContador>NS_POR_SEGUNDO) {
+				ventana.setTitle(NOMBRE+" || APS: "+aps+" || FPS: "+fps);
+				aps=0;
+				fps=0;
+				referenciaContador=System.nanoTime();
+			}
 		}
 	}
 }
