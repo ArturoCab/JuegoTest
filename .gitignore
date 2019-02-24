@@ -3,3 +3,4 @@
 .settings/
 .help
 bin/*
+bin/juego/Juego.class
