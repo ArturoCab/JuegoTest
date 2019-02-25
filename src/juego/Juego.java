@@ -6,6 +6,8 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
+import control.Keyboard;
+
 public class Juego extends Canvas implements Runnable {
 	private static final long serialVersionUID = 214687697799453950L;
 	
@@ -21,11 +23,15 @@ public class Juego extends Canvas implements Runnable {
 	private static int fps=0;
 	
 	private static Thread thread;
+	private static Keyboard keyboard;
 	
 	
 	private Juego() {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		ventana = new JFrame(NOMBRE);
+		
+		keyboard=new Keyboard();
+		addKeyListener(keyboard);
 		
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ventana.setResizable(false);
@@ -60,6 +66,7 @@ public class Juego extends Canvas implements Runnable {
 	}
 	private void actualizar() {
 		aps++;
+		keyboard.update();
 	}
 	
 	private void mostrar() {
